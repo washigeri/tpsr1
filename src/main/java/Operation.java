@@ -6,10 +6,11 @@ enum OperationType {
     UNKNOWN
 }
 
-public class Operation {
+class Operation {
     private OperationType type;
     private String arg1;
     private String arg2;
+    private Number[] values = null;
 
     Operation(String op, String val1, String val2) {
         setArg1(val1);
@@ -31,9 +32,10 @@ public class Operation {
                 setType(OperationType.UNKNOWN);
                 break;
         }
+        setValues(parseValues());
     }
 
-    public Number[] parseValues() {
+    private Number[] parseValues() {
         Number[] res = new Number[2];
         if (getArg1() != null && getArg2() != null) {
             if (getArg1().matches(".*[.,].*")) {
@@ -50,7 +52,28 @@ public class Operation {
         return res;
     }
 
-    public OperationType getType() {
+    Message createMsg() throws Exception {
+        String methodName = "";
+        switch (getType()) {
+            case PLUS:
+                methodName = "add";
+                break;
+            case MINUS:
+                methodName = "sub";
+                break;
+            case DIVIDE:
+                methodName = "divide";
+                break;
+            case MULTIPLY:
+                methodName = "multiply";
+                break;
+            case UNKNOWN:
+                throw new Exception("UNKNOWN OPERATION TYPE");
+        }
+        return new Message(getValues()[0], getValues()[1], methodName);
+    }
+
+    private OperationType getType() {
         return type;
     }
 
@@ -58,7 +81,7 @@ public class Operation {
         this.type = type;
     }
 
-    public String getArg1() {
+    private String getArg1() {
         return arg1;
     }
 
@@ -66,11 +89,19 @@ public class Operation {
         this.arg1 = arg1;
     }
 
-    public String getArg2() {
+    private String getArg2() {
         return arg2;
     }
 
     private void setArg2(String arg2) {
         this.arg2 = arg2;
+    }
+
+    private Number[] getValues() {
+        return values;
+    }
+
+    private void setValues(Number[] values) {
+        this.values = values;
     }
 }
