@@ -2,7 +2,7 @@ import java.io.Serializable;
 
 public class Calc implements Serializable {
 
-    public static float add(float a, float b) {
+    float add(float a, float b) {
         return a + b;
     }
 
