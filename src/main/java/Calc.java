@@ -24,8 +24,8 @@ public class Calc implements Serializable {
         return a * b;
     }
 
-    public static int divide(int a, int b) {
-        return a / b;
+    public static double divide(int a, int b) {
+        return (double) a / (double) b;
     }
 
     public static double divide(double a, double b) {

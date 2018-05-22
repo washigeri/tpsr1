@@ -81,7 +81,7 @@ public class Client {
     private static boolean processExpression(String input) throws Exception {
         System.out.println("Processing expression");
         String exit_pattern = "(?i)\\s*exit\\s*"; //regex pour détecter si on tape "exit"
-        Pattern operation_pattern = Pattern.compile("(?i)\\s*(\\d+[.,]?\\d*)\\s*([+\\-*/])\\s*(\\d+[.,]?\\d*)\\s*"); //regex pour analyser l'expression arithmétique, l'expression ne peut être que de la forme a(+-/*)b (deux valeurs seulement)
+        Pattern operation_pattern = Pattern.compile("(?i)\\s*([+\\-]?\\d+[.,]?\\d*)\\s*([+\\-*/])\\s*([+\\-]?\\d+[.,]?\\d*)\\s*"); //regex pour analyser l'expression arithmétique, l'expression ne peut être que de la forme a(+-/*)b (deux valeurs seulement)
         if (input.matches(exit_pattern))
             return false; //si exit, on renvoie false pour arreter la boucle principale
         else {
