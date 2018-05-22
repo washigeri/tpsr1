@@ -14,8 +14,8 @@ public class Server {
 
     /**
      * Fonction principale d'exécution du serveur. On écoute sur le port, puis lorsqu'une connexion se fait
-     * on traite les demandes du client puis on envoie la réponse.
-     *
+     * on traite les demandes du client puis on envoie la réponse. Chaque client connecté est géré par un thread
+     * différent.
      * @param args Paramètres de lancement du programme. Utilisé pour changer le port d'écoute si besoin
      */
     public static void main(String[] args) {
@@ -31,21 +31,26 @@ public class Server {
                 System.out.println("Client connected from " + clientSock.getInetAddress().toString());
                 ObjectInputStream inFromClient = new ObjectInputStream(clientSock.getInputStream()); //Création des Stream de communication avec le client
                 ObjectOutputStream outToClient = new ObjectOutputStream(clientSock.getOutputStream());
-                while (true) { //tant que la connexion est active
-                    try {
 
-                        Message inMsg = (Message) inFromClient.readObject(); //réception du message du client
-                        Number result = processMsg(inMsg); //analyse
-                        if (result != null) {
-                            outToClient.writeObject(result); //envoi du résultat
+                Thread t = new Thread(() -> { //On créé un nouveaau Thread pour ne pas empecher la connexion d'autres potentiels clients
+                    while (true) { //tant que la connexion est active
+                        try {
+
+                            Message inMsg = (Message) inFromClient.readObject(); //réception du message du client
+                            Number result = processMsg(inMsg); //analyse
+                            if (result != null) {
+                                outToClient.writeObject(result); //envoi du résultat
+                            }
+                        } catch (Exception e) {
+                            System.err.println("Connection closed from " + clientSock.getInetAddress());
+
+                            System.err.println("Stack Trace: " + Arrays.toString(e.getStackTrace()));
+                            break;
                         }
-                    } catch (Exception e) {
-                        System.err.println("Connection closed from " + clientSock.getInetAddress());
-
-                        System.err.println("Stack Trace: " + Arrays.toString(e.getStackTrace()));
-                        break;
                     }
-                }
+                });
+                t.start();
+
             }
         } catch (Exception e) {
             System.err.println("Server Error: " + e.getMessage());
