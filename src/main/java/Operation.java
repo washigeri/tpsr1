@@ -1,4 +1,7 @@
 enum OperationType {
+    /**
+     * Enum représentant les types d'opérations possibles
+     */
     PLUS,
     MINUS,
     MULTIPLY,
@@ -7,12 +10,24 @@ enum OperationType {
 }
 
 class Operation {
+    /**
+     * Classe représentant une opération. On y stocke un type d'opération, les strings réprésentant les deux arguments
+     * et un tableau de Number stockant les interprétations de ces arguments (Integer ou Double).
+     */
     private OperationType type;
     private String arg1;
     private String arg2;
     private Number[] values = null;
 
+    /**
+     * Constructeur d'une opération.
+     *
+     * @param op   opérande (+,-,*,/)
+     * @param val1 premier argument de l'opérande
+     * @param val2 deuxième argument de l'opérande
+     */
     Operation(String op, String val1, String val2) {
+
         setArg1(val1);
         setArg2(val2);
         switch (op) {
@@ -35,10 +50,14 @@ class Operation {
         setValues(parseValues());
     }
 
+    /**
+     * Méthode qui analyse les arguments pour les convertir de String à un type numérique
+     * @return Un tableau de number représentant les deux arguments interprétes
+     */
     private Number[] parseValues() {
         Number[] res = new Number[2];
         if (getArg1() != null && getArg2() != null) {
-            if (getArg1().matches(".*[.,].*")) {
+            if (getArg1().matches(".*[.,].*")) { //On vérifie si on trouve une virgule ou un point => Double sinon Int
                 res[0] = Double.parseDouble(getArg1());
             } else {
                 res[0] = Integer.parseInt(getArg1());
@@ -52,6 +71,12 @@ class Operation {
         return res;
     }
 
+    /**
+     * Méthode qui permet de créer un message à partir des données de l'opérations. On ajuste le nom de la méthode à appeler
+     * en fonction du type d'opération analysé
+     * @return Message a envoyer au serveur
+     * @throws Exception Exception levée si on n'arrive pas à determiner la nature de l'opération
+     */
     Message createMsg() throws Exception {
         String methodName = "";
         switch (getType()) {

@@ -1,6 +1,10 @@
 import java.io.Serializable;
 
 @SuppressWarnings("ALL")
+/**
+ * Classe qui est appelée pour effectuer les opérations arithmétiques
+ * de base (addition, soustraction, multiplication et division).
+ */
 public class Calc implements Serializable {
 
 
